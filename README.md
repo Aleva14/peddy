@@ -2,14 +2,14 @@ Change in filtering of SNPs:
 
 file peddy/peddy.py
 
-Old filtering conditions:
-length(REF) = 1
-length(ALT) = 1
-call_rate < 0.5 (proportion of samples that were not UNKNOWN)
-aaf > 0.01 (alternate allele frequency across samples in this VCF)
-gt_depth > 7 (read-depth)
+Old filtering conditions:  
+length(REF) = 1  
+length(ALT) = 1  
+call_rate < 0.5 (proportion of samples that were not UNKNOWN)  
+aaf > 0.01 (alternate allele frequency across samples in this VCF)  
+gt_depth > 7 (read-depth)  
 
-New conditions:
+New conditions:  
 PASS in field FILTER (mutations are filtered beforehands by another program) 
 
 
