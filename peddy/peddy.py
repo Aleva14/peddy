@@ -724,22 +724,36 @@ class Ped(object):
             if len(variant.REF) > 1: continue
             # skip multiple alternates
             if len(variant.ALT) > 1: continue
-            if variant.call_rate < 0.5: continue
-            if variant.aaf < 0.01: continue
-            if any(s <= variant.start and e >= variant.start for chrom, (s, e) in pars):
-                skipped += 1
-                continue
-            if np.all(variant.gt_depths < 0):
-                # if not samples have depths, then we assume the vcf doesn't have them and
-                # we use all samples
-                depth_filter = np.ones_like(hom_ref)
-            else:
-                depth_filter = variant.gt_depths >= min_depth
-            gt_types = variant.gt_types
+            
+            # Initial filtering (commented)
 
-            hom_ref += (gt_types == 0) & depth_filter
-            hom_alt += (gt_types == 2) & depth_filter
-            het += (gt_types == 1) & depth_filter
+            # if variant.call_rate < 0.5: continue
+            # if variant.aaf < 0.01: continue
+            # if any(s <= variant.start and e >= variant.start for chrom, (s, e) in pars):
+            #     skipped += 1
+            #     continue
+            # if np.all(variant.gt_depths < 0):
+            #     # if not samples have depths, then we assume the vcf doesn't have them and
+            #     # we use all samples
+            #     depth_filter = np.ones_like(hom_ref)
+            # else:
+            #     depth_filter = variant.gt_depths >= min_depth
+            # gt_types = variant.gt_types
+
+            # hom_ref += (gt_types == 0) & depth_filter
+            # hom_alt += (gt_types == 2) & depth_filter
+            # het += (gt_types == 1) & depth_filter
+            
+            # New filtering - just check that there is PASS in FILTER field
+
+            if variant.FILTER is not None:
+                continue
+            
+
+            gt_types = variant.gt_types
+            hom_ref += (gt_types == 0)
+            hom_alt += (gt_types == 2)
+            het += (gt_types == 1)
             kept += 1
             if kept >= n_sites: break
 
